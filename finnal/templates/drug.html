@@ -1,0 +1,440 @@
+{% extends "base.html" %}
+
+{% block title %}Drug Information{% endblock %}
+
+{% block content %}
+<div class="drug-wrapper">
+    <div class="drug-container">
+        <!-- Header Section -->
+        <div class="drug-header">
+            <h1>Hi! Welcome to Drug Information</h1>
+            <p>Search for detailed information about any drug</p>
+        </div>
+
+        <!-- Search Section -->
+        <div class="drug-search-section">
+            <div class="search-container">
+                <form id="drugSearchForm" onsubmit="searchDrug(event)">
+                    <div class="search-box">
+                        <div class="search-input-wrapper">
+                            <input type="text" id="drugName" placeholder="Type medicine name to see suggestions..." autocomplete="off">
+                            <div class="search-icon">🔍</div>
+                        </div>
+                        <button type="submit">Search</button>
+                    </div>
+                    <div id="suggestions" class="suggestions-box">
+                        <div class="suggestions-header">
+                            <span>Suggestions</span>
+                            <span class="suggestion-count"></span>
+                        </div>
+                        <div class="suggestions-list"></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="drugResults" class="drug-results">
+            <div class="placeholder-message">
+                <div class="placeholder-icon">💊</div>
+                <p>Enter a drug name to get detailed information</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .drug-wrapper {
+        min-height: 100vh;
+        background: linear-gradient(135deg, var(--bg-color) 0%, #f8f9fa 100%);
+        padding: 2rem;
+    }
+
+    .drug-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .drug-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        background: var(--card-bg);
+        padding: 2rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px var(--shadow-color);
+    }
+
+    .drug-header h1 {
+        font-size: 2.8rem;
+        color: var(--text-color);
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+
+    .drug-header p {
+        color: var(--text-light);
+        font-size: 1.1rem;
+    }
+
+    .search-container {
+        max-width: 600px;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    .search-box {
+        display: flex;
+        gap: 1rem;
+        background: var(--card-bg);
+        padding: 1rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px var(--shadow-color);
+    }
+
+    .search-input-wrapper {
+        flex: 1;
+        position: relative;
+    }
+
+    .search-input-wrapper input {
+        width: 100%;
+        padding: 1rem;
+        padding-right: 3rem;
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .search-input-wrapper input:focus {
+        border-color: var(--primary-color);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.1);
+    }
+
+    .search-icon {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-light);
+        pointer-events: none;
+    }
+
+    .search-box button {
+        padding: 1rem 2rem;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .search-box button:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+    }
+
+    .suggestions-box {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px var(--shadow-color);
+        margin-top: 0.5rem;
+        max-height: 400px;
+        overflow-y: auto;
+        display: none;
+        z-index: 1000;
+    }
+
+    .suggestions-header {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--bg-color);
+        border-radius: 8px 8px 0 0;
+    }
+
+    .suggestions-header span {
+        font-weight: 600;
+        color: var(--text-color);
+    }
+
+    .suggestion-count {
+        color: var(--text-light);
+        font-size: 0.9rem;
+    }
+
+    .suggestions-list {
+        padding: 0.5rem;
+    }
+
+    .suggestion-item {
+        padding: 1rem;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        margin-bottom: 0.5rem;
+    }
+
+    .suggestion-item:hover {
+        background: var(--bg-color);
+        transform: translateX(5px);
+    }
+
+    .suggestion-item .name {
+        font-weight: 600;
+        color: var(--text-color);
+        font-size: 1.1rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .suggestion-item .details {
+        font-size: 0.9rem;
+        color: var(--text-light);
+    }
+
+    .suggestion-item .category {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        background: var(--primary-color);
+        color: white;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+    }
+
+    .drug-results {
+        margin-top: 2rem;
+        background: var(--card-bg);
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px var(--shadow-color);
+    }
+
+    .placeholder-message {
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .placeholder-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .medicine-info {
+        display: none;
+    }
+
+    .medicine-info.visible {
+        display: block;
+    }
+
+    .info-section {
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background: var(--bg-color);
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .info-section:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px var(--shadow-color);
+    }
+
+    .info-section h3 {
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+        font-size: 1.2rem;
+    }
+
+    .error-message {
+        color: #dc3545;
+        text-align: center;
+        padding: 1rem;
+        background: rgba(220, 53, 69, 0.1);
+        border-radius: 8px;
+    }
+
+    /* Loading animation */
+    .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(0,0,0,0.1);
+        border-radius: 50%;
+        border-top-color: var(--primary-color);
+        animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+</style>
+
+<script>
+let searchTimeout;
+
+async function searchDrug(event) {
+    event.preventDefault();
+    const drugName = document.getElementById('drugName').value.trim();
+    const resultsDiv = document.getElementById('drugResults');
+
+    if (!drugName) {
+        resultsDiv.innerHTML = `
+            <div class="error-message">
+                Please enter a medicine name
+            </div>
+        `;
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/medicine/${encodeURIComponent(drugName)}`);
+        const data = await response.json();
+
+        if (data.error) {
+            resultsDiv.innerHTML = `
+                <div class="error-message">
+                    ${data.error}
+                </div>
+            `;
+            return;
+        }
+
+        // Display medicine information
+        resultsDiv.innerHTML = `
+            <div class="medicine-info visible">
+                <div class="info-section">
+                    <h3>Name</h3>
+                    <p>${data.name}</p>
+                </div>
+                <div class="info-section">
+                    <h3>Generic Name</h3>
+                    <p>${data.generic_name}</p>
+                </div>
+                <div class="info-section">
+                    <h3>Brand Name</h3>
+                    <p>${data.brand_name}</p>
+                </div>
+                <div class="info-section">
+                    <h3>Category</h3>
+                    <p>${data.category}</p>
+                </div>
+                <div class="info-section">
+                    <h3>Manufacturer</h3>
+                    <p>${data.manufacturer}</p>
+                </div>
+                <div class="info-section">
+                    <h3>Description</h3>
+                    <p>${data.description}</p>
+                </div>
+                <div class="info-section">
+                    <h3>Uses</h3>
+                    <p>${data.uses}</p>
+                </div>
+                <div class="info-section">
+                    <h3>Dosage</h3>
+                    <p>${data.dosage}</p>
+                </div>
+                <div class="info-section">
+                    <h3>Side Effects</h3>
+                    <p>${data.side_effects}</p>
+                </div>
+                <div class="info-section">
+                    <h3>Precautions</h3>
+                    <p>${data.precautions}</p>
+                </div>
+                <div class="info-section">
+                    <h3>Interactions</h3>
+                    <p>${data.interactions}</p>
+                </div>
+                <div class="info-section">
+                    <h3>Storage</h3>
+                    <p>${data.storage}</p>
+                </div>
+            </div>
+        `;
+    } catch (error) {
+        resultsDiv.innerHTML = `
+            <div class="error-message">
+                Error searching for medicine. Please try again.
+            </div>
+        `;
+    }
+}
+
+// Add event listener for input changes
+document.getElementById('drugName').addEventListener('input', function(e) {
+    const query = e.target.value.trim();
+    const suggestionsBox = document.getElementById('suggestions');
+    const suggestionsList = suggestionsBox.querySelector('.suggestions-list');
+    const suggestionCount = suggestionsBox.querySelector('.suggestion-count');
+    
+    // Clear previous timeout
+    clearTimeout(searchTimeout);
+    
+    if (query.length < 2) {
+        suggestionsBox.style.display = 'none';
+        return;
+    }
+    
+    // Show loading state
+    suggestionsBox.style.display = 'block';
+    suggestionsList.innerHTML = '<div class="suggestion-item"><div class="loading"></div></div>';
+    
+    // Set new timeout for search
+    searchTimeout = setTimeout(async () => {
+        try {
+            const response = await fetch(`/api/medicine/suggestions/${encodeURIComponent(query)}`);
+            const data = await response.json();
+
+            if (data.suggestions && data.suggestions.length > 0) {
+                suggestionsList.innerHTML = data.suggestions.map(med => `
+                    <div class="suggestion-item" onclick="selectSuggestion('${med.name}')">
+                        <div class="name">${med.name}</div>
+                        <div class="details">
+                            ${med.generic_name ? `<div>Generic: ${med.generic_name}</div>` : ''}
+                            ${med.brand_name ? `<div>Brand: ${med.brand_name}</div>` : ''}
+                            ${med.category ? `<div class="category">${med.category}</div>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+                suggestionCount.textContent = `${data.suggestions.length} suggestions`;
+            } else {
+                suggestionsList.innerHTML = '<div class="suggestion-item">No suggestions found</div>';
+                suggestionCount.textContent = '0 suggestions';
+            }
+        } catch (error) {
+            console.error('Error fetching suggestions:', error);
+            suggestionsList.innerHTML = '<div class="suggestion-item">Error loading suggestions</div>';
+        }
+    }, 300); // 300ms delay
+});
+
+function selectSuggestion(name) {
+    document.getElementById('drugName').value = name;
+    document.getElementById('suggestions').style.display = 'none';
+            searchDrug(new Event('submit'));
+}
+
+// Close suggestions when clicking outside
+document.addEventListener('click', function(e) {
+    const suggestionsBox = document.getElementById('suggestions');
+    const searchBox = document.querySelector('.search-box');
+    
+    if (!searchBox.contains(e.target)) {
+        suggestionsBox.style.display = 'none';
+    }
+});
+</script>
+{% endblock %} 

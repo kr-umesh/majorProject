@@ -1,0 +1,499 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="home-wrapper">
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Transform Medical Records with AI</h1>
+            <p class="hero-subtitle">Extract, analyze, and summarize medical transcriptions with advanced AI technology</p>
+            <div class="hero-buttons">
+                <a href="{{ url_for('extract_text') }}" class="primary-button">
+                    <span class="button-text">Get Started</span>
+                    <span class="button-icon">→</span>
+                </a>
+                <a href="#how-it-works" class="secondary-button">
+                    <span class="button-text">Learn More</span>
+                    <span class="button-icon">↓</span>
+                </a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="{{ url_for('static', filename='images/hero-image.png') }}" alt="Medical Transcription AI">
+        </div>
+    </section>
+
+    <!-- Video Section -->
+    <section class="video-section" id="how-it-works">
+        <div class="section-header">
+            <h2>How It Works</h2>
+            <p>Watch how our AI transforms medical transcriptions into clear, concise summaries</p>
+        </div>
+        <div class="video-container">
+            <div class="video-wrapper">
+                <video id="demo-video" controls poster="{{ url_for('static', filename='images/video-poster.jpg') }}">
+                    <source src="{{ url_for('static', filename='videos/medical-transcription-demo.mp4') }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="video-overlay">
+                    <button class="play-button" onclick="playVideo()">
+                        <span class="play-icon">▶</span>
+                    </button>
+                </div>
+            </div>
+            <div class="video-features">
+                <div class="feature-card">
+                    <span class="feature-icon">📝</span>
+                    <h3>Upload Document</h3>
+                    <p>Upload your medical transcription document in any format</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🤖</span>
+                    <h3>AI Processing</h3>
+                    <p>Our AI analyzes and extracts key information</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📊</span>
+                    <h3>Get Summary</h3>
+                    <p>Receive a clear, concise summary of the transcription</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="section-header">
+            <h2>Key Features</h2>
+            <p>Discover what makes our medical transcription service unique</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">🎯</div>
+                <h3>High Accuracy</h3>
+                <p>Advanced OCR technology ensures precise text extraction</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">⚡</div>
+                <h3>Fast Processing</h3>
+                <p>Get results in seconds with our optimized AI system</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🔒</div>
+                <h3>Secure & Private</h3>
+                <p>Your medical data is protected with enterprise-grade security</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📱</div>
+                <h3>Mobile Friendly</h3>
+                <p>Access and process documents from any device</p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+    .home-wrapper {
+        min-height: 100vh;
+        background: var(--bg-color);
+        transition: background-color 0.3s;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6rem 4rem;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+        z-index: 1;
+    }
+
+    .hero-content {
+        flex: 1;
+        max-width: 600px;
+        position: relative;
+        z-index: 2;
+        animation: fadeInLeft 0.8s ease-out;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        margin-bottom: 2.5rem;
+        line-height: 1.6;
+    }
+
+    .hero-buttons {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .primary-button, .secondary-button {
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .primary-button {
+        background: white;
+        color: var(--primary-color);
+    }
+
+    .secondary-button {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+    }
+
+    .primary-button:hover, .secondary-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .button-icon {
+        transition: transform 0.3s ease;
+    }
+
+    .primary-button:hover .button-icon {
+        transform: translateX(4px);
+    }
+
+    .secondary-button:hover .button-icon {
+        transform: translateY(4px);
+    }
+
+    .hero-image {
+        flex: 1;
+        max-width: 500px;
+        position: relative;
+        z-index: 2;
+        animation: fadeInRight 0.8s ease-out;
+    }
+
+    .hero-image img {
+        width: 100%;
+        height: auto;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Video Section */
+    .video-section {
+        padding: 6rem 4rem;
+        background: var(--card-bg);
+        transition: background-color 0.3s;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+    .section-header h2 {
+        font-size: 2.5rem;
+        color: var(--text-color);
+        margin-bottom: 1rem;
+        font-weight: 700;
+        transition: color 0.3s;
+    }
+
+    .section-header p {
+        font-size: 1.2rem;
+        color: var(--text-light);
+        transition: color 0.3s;
+    }
+
+    .video-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .video-wrapper {
+        position: relative;
+        width: 100%;
+        padding-top: 56.25%; /* 16:9 Aspect Ratio */
+        background: var(--bg-color);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px var(--shadow-color);
+        transition: all 0.3s ease;
+    }
+
+    .video-wrapper video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .video-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .play-button {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: white;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .play-icon {
+        font-size: 2rem;
+        color: var(--primary-color);
+    }
+
+    .play-button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .video-features {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    .feature-card {
+        background: var(--card-bg);
+        padding: 2rem;
+        border-radius: 16px;
+        text-align: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 20px var(--shadow-color);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px var(--shadow-color);
+    }
+
+    .feature-card .feature-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .feature-card h3 {
+        font-size: 1.3rem;
+        color: var(--text-color);
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+        transition: color 0.3s;
+    }
+
+    .feature-card p {
+        color: var(--text-light);
+        font-size: 1rem;
+        line-height: 1.6;
+        transition: color 0.3s;
+    }
+
+    /* Features Section */
+    .features-section {
+        padding: 6rem 4rem;
+        background: var(--bg-color);
+        transition: background-color 0.3s;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .feature-item {
+        background: var(--card-bg);
+        padding: 2rem;
+        border-radius: 16px;
+        text-align: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 20px var(--shadow-color);
+    }
+
+    .feature-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px var(--shadow-color);
+    }
+
+    .feature-item .feature-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .feature-item h3 {
+        font-size: 1.3rem;
+        color: var(--text-color);
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+        transition: color 0.3s;
+    }
+
+    .feature-item p {
+        color: var(--text-light);
+        font-size: 1rem;
+        line-height: 1.6;
+        transition: color 0.3s;
+    }
+
+    @keyframes fadeInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes fadeInRight {
+        from {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @media (max-width: 1200px) {
+        .hero-section {
+            padding: 4rem 2rem;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+        }
+
+        .video-section, .features-section {
+            padding: 4rem 2rem;
+        }
+
+        .features-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero-section {
+            flex-direction: column;
+            text-align: center;
+            padding: 3rem 1.5rem;
+        }
+
+        .hero-content {
+            margin-bottom: 3rem;
+        }
+
+        .hero-buttons {
+            justify-content: center;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+        }
+
+        .video-features {
+            grid-template-columns: 1fr;
+        }
+
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+        }
+
+        .primary-button, .secondary-button {
+            padding: 0.875rem 1.5rem;
+            font-size: 1rem;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+        }
+    }
+</style>
+
+<script>
+    function playVideo() {
+        const video = document.getElementById('demo-video');
+        const overlay = document.querySelector('.video-overlay');
+        
+        video.play();
+        overlay.style.opacity = '0';
+        overlay.style.pointerEvents = 'none';
+    }
+
+    // Add smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+</script>
+{% endblock %} 

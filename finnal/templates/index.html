@@ -1,0 +1,342 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Medical Assistant{% endblock %}
+
+{% block content %}
+<div class="home-wrapper">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="hero-content">
+            <h1>Welcome to Medical Assistant</h1>
+            <p>Your comprehensive healthcare companion</p>
+            <div class="hero-buttons">
+                <a href="{{ url_for('drug') }}" class="primary-button">
+                    <i class="fas fa-pills"></i>
+                    Search Medicines
+                </a>
+                <a href="{{ url_for('summarize') }}" class="secondary-button">
+                    <i class="fas fa-file-medical"></i>
+                    Document Analysis
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features-section">
+        <h2>Our Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-pills"></i>
+                </div>
+                <h3>Medicine Information</h3>
+                <p>Access detailed information about medicines, including uses, side effects, and precautions.</p>
+                <a href="{{ url_for('drug') }}" class="feature-link">Learn More</a>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-file-medical"></i>
+                </div>
+                <h3>Document Analysis</h3>
+                <p>Upload and analyze medical documents with our advanced text extraction and summarization tools.</p>
+                <a href="{{ url_for('summarize') }}" class="feature-link">Learn More</a>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-user-md"></i>
+                </div>
+                <h3>Health Profile</h3>
+                <p>Manage your health information and track your medical history in one secure place.</p>
+                <a href="{{ url_for('profile') }}" class="feature-link">Learn More</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions Section -->
+    <div class="quick-actions-section">
+        <h2>Quick Actions</h2>
+        <div class="quick-actions-grid">
+            <a href="{{ url_for('drug') }}" class="quick-action-card">
+                <i class="fas fa-search"></i>
+                <span>Search Medicines</span>
+            </a>
+            <a href="{{ url_for('summarize') }}" class="quick-action-card">
+                <i class="fas fa-file-upload"></i>
+                <span>Upload Document</span>
+            </a>
+            <a href="{{ url_for('profile') }}" class="quick-action-card">
+                <i class="fas fa-user"></i>
+                <span>View Profile</span>
+            </a>
+            <a href="{{ url_for('edit_profile') }}" class="quick-action-card">
+                <i class="fas fa-edit"></i>
+                <span>Edit Profile</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Recent Activity Section -->
+    <div class="recent-activity-section">
+        <h2>Recent Activity</h2>
+        <div class="activity-timeline">
+            <div class="activity-item">
+                <div class="activity-icon">
+                    <i class="fas fa-sign-in-alt"></i>
+                </div>
+                <div class="activity-content">
+                    <h4>Welcome Back!</h4>
+                    <p>You've successfully logged in to your account.</p>
+                    <span class="activity-time">Just now</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .home-wrapper {
+        min-height: 100vh;
+        padding: 2rem;
+        position: relative;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        background: var(--card-bg);
+        border-radius: var(--border-radius);
+        padding: 3rem 2rem;
+        text-align: center;
+        margin-bottom: 3rem;
+        box-shadow: var(--card-shadow);
+        border: 1px solid var(--border-color);
+    }
+
+    .hero-content {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .hero-content h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: var(--text-color);
+    }
+
+    .hero-content p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        color: var(--text-light);
+    }
+
+    .hero-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+    }
+
+    .primary-button, .secondary-button {
+        padding: 0.8rem 1.5rem;
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all var(--transition-speed) ease;
+    }
+
+    .primary-button {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .secondary-button {
+        background: var(--background-light);
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
+    }
+
+    .primary-button:hover, .secondary-button:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--card-hover-shadow);
+    }
+
+    /* Features Section */
+    .features-section {
+        margin-bottom: 3rem;
+    }
+
+    .features-section h2 {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: var(--text-color);
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .feature-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        padding: 2rem;
+        text-align: center;
+        transition: all var(--transition-speed) ease;
+        box-shadow: var(--card-shadow);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--card-hover-shadow);
+    }
+
+    .feature-icon {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: var(--primary-color);
+    }
+
+    .feature-card h3 {
+        color: var(--text-color);
+        margin-bottom: 1rem;
+    }
+
+    .feature-card p {
+        color: var(--text-light);
+        margin-bottom: 1.5rem;
+    }
+
+    .feature-link {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .feature-link:hover {
+        text-decoration: underline;
+    }
+
+    /* Quick Actions Section */
+    .quick-actions-section {
+        margin-bottom: 3rem;
+    }
+
+    .quick-actions-section h2 {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: var(--text-color);
+    }
+
+    .quick-actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .quick-action-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        text-align: center;
+        text-decoration: none;
+        color: var(--text-color);
+        transition: all var(--transition-speed) ease;
+        box-shadow: var(--card-shadow);
+    }
+
+    .quick-action-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--card-hover-shadow);
+    }
+
+    .quick-action-card i {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--primary-color);
+    }
+
+    .quick-action-card span {
+        display: block;
+        font-weight: 600;
+    }
+
+    /* Recent Activity Section */
+    .recent-activity-section {
+        margin-bottom: 3rem;
+    }
+
+    .recent-activity-section h2 {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: var(--text-color);
+    }
+
+    .activity-timeline {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        padding: 2rem;
+        box-shadow: var(--card-shadow);
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1rem;
+        border-radius: var(--border-radius);
+    }
+
+    .activity-icon {
+        font-size: 1.2rem;
+        color: var(--primary-color);
+    }
+
+    .activity-content h4 {
+        color: var(--text-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .activity-content p {
+        color: var(--text-light);
+        margin-bottom: 0.5rem;
+    }
+
+    .activity-time {
+        color: var(--text-light);
+        font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .hero-content h1 {
+            font-size: 2rem;
+        }
+
+        .hero-content p {
+            font-size: 1.1rem;
+        }
+
+        .hero-buttons {
+            flex-direction: column;
+        }
+
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .quick-actions-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+
+<!-- Add Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %} 

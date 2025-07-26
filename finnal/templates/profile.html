@@ -1,0 +1,326 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - Medical Assistant{% endblock %}
+
+{% block content %}
+<div class="profile-wrapper">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="profile-avatar" id="profileAvatar">
+            {% if current_user.profile_image %}
+                <img src="{{ url_for('static', filename='uploads/' + current_user.profile_image) }}" alt="Profile Image">
+            {% else %}
+                <i class="fas fa-user-circle"></i>
+            {% endif %}
+            <div class="avatar-overlay">
+                <i class="fas fa-camera"></i>
+                <span>Change Photo</span>
+            </div>
+        </div>
+        <div class="profile-info">
+            <h1>{{ current_user.username }}</h1>
+            <div class="profile-actions">
+                <a href="{{ url_for('edit_profile') }}" class="edit-button">
+                    <i class="fas fa-edit"></i>
+                    Edit Profile
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Personal Information Card -->
+    <div class="profile-content">
+        <div class="profile-card">
+            <div class="card-header">
+                <i class="fas fa-user"></i>
+                <h2>Personal Information</h2>
+            </div>
+            <div class="card-content">
+                <div class="info-group">
+                    <label>Username</label>
+                    <p>{{ current_user.username }}</p>
+                </div>
+                <div class="info-group">
+                    <label>Full Name</label>
+                    <p>{{ current_user.name or 'Not provided' }}</p>
+                </div>
+                <div class="info-group">
+                    <label>Gmail</label>
+                    <p>{{ current_user.gmail or 'Not provided' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden Image Upload Form -->
+<form id="imageUploadForm" method="POST" action="{{ url_for('update_profile_image') }}" enctype="multipart/form-data" style="display: none;">
+    <input type="file" id="profileImageInput" name="profile_image" accept="image/*">
+</form>
+
+<style>
+    .profile-wrapper {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    /* Profile Header */
+    .profile-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        border-radius: 20px;
+        padding: 3rem;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        color: white;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-avatar {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+        overflow: hidden;
+    }
+
+    .profile-avatar i {
+        font-size: 6rem;
+        color: white;
+    }
+
+    .profile-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .avatar-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .profile-avatar:hover .avatar-overlay {
+        opacity: 1;
+    }
+
+    .avatar-overlay i {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .avatar-overlay span {
+        font-size: 0.9rem;
+        color: white;
+    }
+
+    .profile-info {
+        flex: 1;
+    }
+
+    .profile-info h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+        font-weight: 700;
+    }
+
+    .profile-actions {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .edit-button {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border-radius: 10px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .edit-button:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+    }
+
+    /* Profile Content */
+    .profile-content {
+        display: flex;
+        justify-content: center;
+    }
+
+    .profile-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        width: 100%;
+        max-width: 600px;
+    }
+
+    .profile-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        background: var(--primary-color);
+        color: white;
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .card-header i {
+        font-size: 1.5rem;
+    }
+
+    .card-header h2 {
+        font-size: 1.5rem;
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .card-content {
+        padding: 2rem;
+    }
+
+    .info-group {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .info-group:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+
+    .info-group label {
+        display: block;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .info-group p {
+        color: var(--text-color);
+        font-size: 1.1rem;
+        margin: 0;
+        font-weight: 500;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .profile-header {
+            flex-direction: column;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .profile-avatar {
+            margin: 0 auto;
+        }
+
+        .profile-info h1 {
+            font-size: 2rem;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+    }
+
+    /* Animations */
+    .profile-header {
+        animation: fadeInDown 0.5s ease-out;
+    }
+
+    .profile-card {
+        animation: fadeInUp 0.5s ease-out;
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<script>
+    // Image Upload Functionality
+    const profileAvatar = document.getElementById('profileAvatar');
+    const imageInput = document.getElementById('profileImageInput');
+    const imageUploadForm = document.getElementById('imageUploadForm');
+
+    profileAvatar.addEventListener('click', () => {
+        imageInput.click();
+    });
+
+    imageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            // Check file size (2MB max)
+            if (file.size > 2 * 1024 * 1024) {
+                alert('File size should not exceed 2MB');
+                this.value = '';
+                return;
+            }
+
+            // Check file type
+            if (!file.type.startsWith('image/')) {
+                alert('Please upload an image file');
+                this.value = '';
+                return;
+            }
+
+            // Submit the form
+            imageUploadForm.submit();
+        }
+    });
+</script>
+
+<!-- Add Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %} 

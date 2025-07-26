@@ -1,0 +1,840 @@
+{% extends "base.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-container">
+        <div class="auth-left">
+            <div class="auth-content">
+                <div class="logo-container">
+                    <span class="logo-icon">📝</span>
+                    <h1>Text Extractor</h1>
+                </div>
+                <p class="welcome-text">Join our community and start extracting text from images with advanced AI technology.</p>
+                <div class="auth-features">
+                    <div class="feature">
+                        <span class="feature-icon">📝</span>
+                        <div class="feature-content">
+                            <h3>Advanced Text Extraction</h3>
+                            <p>Extract text from images with high accuracy using our advanced OCR technology</p>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">🤖</span>
+                        <div class="feature-content">
+                            <h3>AI-Powered Analysis</h3>
+                            <p>Leverage cutting-edge AI for intelligent text processing and analysis</p>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">🔒</span>
+                        <div class="feature-content">
+                            <h3>Enterprise Security</h3>
+                            <p>Your data is protected with industry-leading security measures</p>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">🌐</span>
+                        <div class="feature-content">
+                            <h3>Multi-language Support</h3>
+                            <p>Extract and process text in multiple languages with high accuracy</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="auth-right">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h2>Create Account</h2>
+                    <p>Fill in your details to get started</p>
+                </div>
+                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                <span class="alert-icon">{% if category == 'success' %}✅{% else %}⚠️{% endif %}</span>
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <form method="POST" action="{{ url_for('register') }}" class="auth-form">
+                    <!-- Profile Image Upload -->
+                    <div class="profile-image-section">
+                        <div class="profile-image-preview" id="profileImagePreview">
+                            <i class="fas fa-user-circle"></i>
+                            <div class="image-overlay">
+                                <i class="fas fa-camera"></i>
+                                <span>Add Photo</span>
+                            </div>
+                        </div>
+                        <input type="file" id="profileImage" name="profile_image" accept="image/*" style="display: none;">
+                        <p class="image-hint">Optional: Add a profile picture (Max 2MB, JPG/PNG)</p>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-icon">👨‍💼</span>
+                            <input type="text" id="name" name="name" required autocomplete="name" minlength="2" maxlength="50" pattern="[a-zA-Z\s]+" title="Name can only contain letters and spaces" placeholder=" ">
+                            <label for="name">Full Name</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-icon">👤</span>
+                            <input type="text" id="username" name="username" required autocomplete="username" minlength="3" maxlength="20" pattern="[a-zA-Z0-9_-]+" title="Username can only contain letters, numbers, underscores, and hyphens" placeholder=" ">
+                            <label for="username">Username</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-icon">📧</span>
+                            <input type="email" id="gmail" name="gmail" required autocomplete="email" pattern="[a-z0-9._%+-]+@gmail\.com$" title="Please enter a valid Gmail address" placeholder=" ">
+                            <label for="gmail">Gmail</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-icon">🔒</span>
+                            <input type="password" id="password" name="password" required autocomplete="new-password" minlength="8" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Password must be at least 8 characters long and include uppercase, lowercase, and numbers" placeholder=" ">
+                            <label for="password">Password</label>
+                            <button type="button" class="toggle-password" onclick="togglePassword('password')" title="Toggle password visibility">👁️</button>
+                        </div>
+                        <div class="password-requirements">
+                            <p>Password must include:</p>
+                            <ul>
+                                <li id="length">At least 8 characters</li>
+                                <li id="uppercase">One uppercase letter</li>
+                                <li id="lowercase">One lowercase letter</li>
+                                <li id="number">One number</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-icon">🔒</span>
+                            <input type="password" id="confirm_password" name="confirm_password" required autocomplete="new-password" placeholder=" ">
+                            <label for="confirm_password">Confirm Password</label>
+                            <button type="button" class="toggle-password" onclick="togglePassword('confirm_password')" title="Toggle password visibility">👁️</button>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="auth-button">
+                        <span class="button-text">Create Account</span>
+                        <span class="button-icon">→</span>
+                    </button>
+                </form>
+                
+                <div class="auth-footer">
+                    <p>Already have an account? <a href="{{ url_for('login') }}" class="auth-link">Sign In</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .auth-wrapper {
+        min-height: 100vh;
+        background: var(--bg-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        transition: background-color 0.3s;
+    }
+
+    .auth-container {
+        display: flex;
+        background: var(--card-bg);
+        border-radius: 24px;
+        box-shadow: 0 20px 40px var(--shadow-color);
+        overflow: hidden;
+        width: 100%;
+        max-width: 1200px;
+        min-height: 700px;
+        transition: all 0.3s ease;
+        animation: slideUp 0.5s ease-out;
+    }
+
+    .auth-left {
+        flex: 1.2;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        padding: 4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .auth-left::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+        z-index: 1;
+    }
+
+    .auth-content {
+        max-width: 500px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        animation: fadeInUp 0.5s ease-out 0.2s both;
+    }
+
+    .logo-icon {
+        font-size: 2.5rem;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 1rem;
+        border-radius: 16px;
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+    }
+
+    .logo-container h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .welcome-text {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        margin-bottom: 3rem;
+        animation: fadeInUp 0.5s ease-out 0.3s both;
+        line-height: 1.6;
+    }
+
+    .auth-features {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .feature {
+        display: flex;
+        align-items: flex-start;
+        gap: 1.5rem;
+        animation: fadeInUp 0.5s ease-out;
+        animation-fill-mode: both;
+    }
+
+    .feature:nth-child(1) { animation-delay: 0.4s; }
+    .feature:nth-child(2) { animation-delay: 0.5s; }
+    .feature:nth-child(3) { animation-delay: 0.6s; }
+    .feature:nth-child(4) { animation-delay: 0.7s; }
+
+    .feature-icon {
+        font-size: 1.8rem;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 1rem;
+        border-radius: 16px;
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        flex-shrink: 0;
+    }
+
+    .feature-content {
+        flex: 1;
+    }
+
+    .feature-content h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+
+    .feature-content p {
+        font-size: 1rem;
+        opacity: 0.8;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    .auth-right {
+        flex: 1;
+        padding: 4rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 450px;
+        margin: 0 auto;
+    }
+
+    .auth-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .auth-header h2 {
+        font-size: 2.2rem;
+        color: var(--text-color);
+        margin-bottom: 0.75rem;
+        font-weight: 700;
+        transition: color 0.3s;
+    }
+
+    .auth-header p {
+        color: var(--text-light);
+        font-size: 1.1rem;
+        transition: color 0.3s;
+    }
+
+    .form-group {
+        margin-bottom: 1.75rem;
+    }
+
+    .input-group {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 1.25rem;
+        font-size: 1.3rem;
+        color: var(--text-light);
+        transition: all 0.3s ease;
+    }
+
+    .input-group input {
+        width: 100%;
+        padding: 1.25rem 1.25rem 1.25rem 3.5rem;
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        background-color: var(--card-bg);
+        color: var(--text-color);
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+    }
+
+    .input-group input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(77, 171, 247, 0.1);
+        outline: none;
+    }
+
+    .input-group input:focus + label,
+    .input-group input:not(:placeholder-shown) + label {
+        transform: translateY(-1.75rem) scale(0.85);
+        color: var(--primary-color);
+    }
+
+    .input-group label {
+        position: absolute;
+        left: 3.5rem;
+        top: 1.25rem;
+        color: var(--text-light);
+        transition: all 0.3s ease;
+        pointer-events: none;
+        background: var(--card-bg);
+        padding: 0 0.5rem;
+        font-size: 1.1rem;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 1.25rem;
+        background: none;
+        border: none;
+        color: var(--text-light);
+        cursor: pointer;
+        padding: 0.5rem;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+    }
+
+    .toggle-password:hover {
+        color: var(--primary-color);
+        transform: scale(1.1);
+    }
+
+    .auth-button {
+        width: 100%;
+        padding: 1.25rem;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        margin-top: 1rem;
+    }
+
+    .auth-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.2),
+            transparent
+        );
+        transition: 0.5s;
+    }
+
+    .auth-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px var(--shadow-color);
+    }
+
+    .auth-button:hover::before {
+        left: 100%;
+    }
+
+    .auth-button:active {
+        transform: translateY(0);
+    }
+
+    .button-icon {
+        transition: transform 0.3s ease;
+        font-size: 1.2rem;
+    }
+
+    .auth-button:hover .button-icon {
+        transform: translateX(4px);
+    }
+
+    .auth-footer {
+        text-align: center;
+        margin-top: 2.5rem;
+        color: var(--text-light);
+        font-size: 1.1rem;
+        transition: color 0.3s;
+    }
+
+    .auth-link {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .auth-link::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--primary-color);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .auth-link:hover {
+        color: var(--primary-dark);
+    }
+
+    .auth-link:hover::after {
+        transform: scaleX(1);
+    }
+
+    .alert {
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        border-radius: 12px;
+        animation: slideDown 0.3s ease-out;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .alert-icon {
+        font-size: 1.3rem;
+    }
+
+    .alert-success {
+        background-color: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+        border: 1px solid rgba(40, 167, 69, 0.2);
+    }
+
+    .alert-error {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+        border: 1px solid rgba(220, 53, 69, 0.2);
+    }
+
+    .password-requirements {
+        margin-top: 0.75rem;
+        font-size: 0.95rem;
+        color: var(--text-light);
+        transition: color 0.3s;
+        background: var(--card-bg);
+        padding: 1rem;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+    }
+
+    .password-requirements p {
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+
+    .password-requirements ul {
+        list-style: none;
+        padding-left: 0;
+        margin: 0;
+    }
+
+    .password-requirements li {
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+    }
+
+    .password-requirements li::before {
+        content: "❌";
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .password-requirements li.valid {
+        color: #28a745;
+    }
+
+    .password-requirements li.valid::before {
+        content: "✅";
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 1024px) {
+        .auth-container {
+            max-width: 900px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .auth-container {
+            flex-direction: column;
+            min-height: auto;
+        }
+
+        .auth-left {
+            padding: 3rem 2rem;
+        }
+
+        .auth-right {
+            padding: 3rem 2rem;
+        }
+
+        .auth-content h1 {
+            font-size: 2rem;
+        }
+
+        .logo-container {
+            justify-content: center;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .auth-wrapper {
+            padding: 1rem;
+        }
+
+        .auth-left {
+            padding: 2rem 1.5rem;
+        }
+
+        .auth-right {
+            padding: 2rem 1.5rem;
+        }
+
+        .auth-header h2 {
+            font-size: 1.8rem;
+        }
+
+        .input-group input {
+            font-size: 1rem;
+            padding: 1rem 1rem 1rem 3rem;
+        }
+
+        .input-group label {
+            font-size: 1rem;
+            left: 3rem;
+            top: 1rem;
+        }
+
+        .password-requirements {
+            font-size: 0.85rem;
+            padding: 0.75rem;
+        }
+    }
+
+    /* Profile Image Section */
+    .profile-image-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .profile-image-preview {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: var(--background-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        border: 3px solid var(--primary-color);
+    }
+
+    .profile-image-preview i {
+        font-size: 4rem;
+        color: var(--text-light);
+    }
+
+    .profile-image-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .image-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .profile-image-preview:hover .image-overlay {
+        opacity: 1;
+    }
+
+    .image-overlay i {
+        font-size: 2rem;
+        color: white;
+        margin-bottom: 0.5rem;
+    }
+
+    .image-overlay span {
+        color: white;
+        font-size: 0.9rem;
+    }
+
+    .image-hint {
+        margin-top: 0.5rem;
+        color: var(--text-light);
+        font-size: 0.9rem;
+        text-align: center;
+    }
+</style>
+
+<script>
+    function togglePassword(inputId) {
+        const passwordInput = document.getElementById(inputId);
+        const type = passwordInput.type === 'password' ? 'text' : 'password';
+        passwordInput.type = type;
+    }
+
+    // Add floating label effect
+    document.querySelectorAll('.input-group input').forEach(input => {
+        input.addEventListener('focus', () => {
+            input.parentElement.classList.add('focused');
+        });
+        
+        input.addEventListener('blur', () => {
+            if (!input.value) {
+                input.parentElement.classList.remove('focused');
+            }
+        });
+    });
+
+    // Password validation
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirm_password');
+    const requirements = {
+        length: document.getElementById('length'),
+        uppercase: document.getElementById('uppercase'),
+        lowercase: document.getElementById('lowercase'),
+        number: document.getElementById('number')
+    };
+
+    function validatePassword() {
+        const value = password.value;
+        
+        // Check length
+        if (value.length >= 8) {
+            requirements.length.classList.add('valid');
+        } else {
+            requirements.length.classList.remove('valid');
+        }
+        
+        // Check uppercase
+        if (/[A-Z]/.test(value)) {
+            requirements.uppercase.classList.add('valid');
+        } else {
+            requirements.uppercase.classList.remove('valid');
+        }
+        
+        // Check lowercase
+        if (/[a-z]/.test(value)) {
+            requirements.lowercase.classList.add('valid');
+        } else {
+            requirements.lowercase.classList.remove('valid');
+        }
+        
+        // Check number
+        if (/\d/.test(value)) {
+            requirements.number.classList.add('valid');
+        } else {
+            requirements.number.classList.remove('valid');
+        }
+    }
+
+    password.addEventListener('input', validatePassword);
+
+    // Form validation
+    const form = document.querySelector('.auth-form');
+    form.addEventListener('submit', (e) => {
+        if (password.value !== confirmPassword.value) {
+            e.preventDefault();
+            alert('Passwords do not match!');
+        }
+
+        // Validate Gmail
+        const gmail = document.getElementById('gmail').value;
+        if (!gmail.endsWith('@gmail.com')) {
+            e.preventDefault();
+            alert('Please enter a valid Gmail address!');
+        }
+    });
+
+    // Auto-hide alerts after 5 seconds
+    document.querySelectorAll('.alert').forEach(alert => {
+        setTimeout(() => {
+            alert.style.opacity = '0';
+            alert.style.transform = 'translateY(-10px)';
+            setTimeout(() => alert.remove(), 300);
+        }, 5000);
+    });
+
+    // Profile Image Upload Preview
+    const profileImagePreview = document.getElementById('profileImagePreview');
+    const profileImageInput = document.getElementById('profileImage');
+
+    profileImagePreview.addEventListener('click', () => {
+        profileImageInput.click();
+    });
+
+    profileImageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            // Check file size (2MB max)
+            if (file.size > 2 * 1024 * 1024) {
+                alert('File size should not exceed 2MB');
+                this.value = '';
+                return;
+            }
+
+            // Check file type
+            if (!file.type.startsWith('image/')) {
+                alert('Please upload an image file');
+                this.value = '';
+                return;
+            }
+
+            // Create preview
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                profileImagePreview.innerHTML = '';
+                profileImagePreview.appendChild(img);
+                profileImagePreview.appendChild(document.querySelector('.image-overlay').cloneNode(true));
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+
+<!-- Add Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %} 
